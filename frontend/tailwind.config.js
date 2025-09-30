@@ -1,5 +1,8 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+// Latest Tailwind CSS config for Vite + DaisyUI (2025)
+import { defineConfig } from "tailwindcss";
+import daisyui from "daisyui";
+
+export default defineConfig({
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -10,31 +13,23 @@ export default {
         sans: ["Inter", "ui-sans-serif", "system-ui"],
         display: ["Poppins", "ui-sans-serif", "system-ui"],
       },
-      borderRadius: {
-        xl: "1.25rem",
-        '2xl': "1.5rem",
-      },
-      boxShadow: {
-        card: "0 4px 32px 0 rgba(30,41,59,0.10)",
-        input: "0 2px 8px 0 rgba(30,41,59,0.06)",
-      },
     },
   },
-  plugins: [require('daisyui')],
+  plugins: [daisyui],
   daisyui: {
     themes: [
       {
         kurakani: {
-          "primary": "#1e3a8a", // deep blue
+          "primary": "#1e3a8a",
           "primary-focus": "#2563eb",
           "primary-content": "#fff",
-          "secondary": "#64748b", // slate
+          "secondary": "#64748b",
           "secondary-focus": "#334155",
           "secondary-content": "#fff",
-          "accent": "#fbbf24", // soft yellow
+          "accent": "#fbbf24",
           "accent-focus": "#f59e42",
           "accent-content": "#fff",
-          "neutral": "#f1f5f9", // light neutral
+          "neutral": "#f1f5f9",
           "neutral-focus": "#e2e8f0",
           "neutral-content": "#1e293b",
           "base-100": "#f9fafb",
@@ -63,4 +58,4 @@ export default {
     rtl: false,
     prefix: "",
   },
-};
+});

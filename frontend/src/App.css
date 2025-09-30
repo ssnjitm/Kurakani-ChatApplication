@@ -1,4 +1,5 @@
-/* Remove custom styles, use Tailwind utility classes for all layout and card styles. */
+@import "tailwindcss";
+
 
 #root {
   width: 100vw;
