@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import User from './user.model.js';
-
+import User from './User.model.js';
 
 const messageSchema = new mongoose.Schema({
   

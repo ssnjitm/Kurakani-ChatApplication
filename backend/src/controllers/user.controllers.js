@@ -1,5 +1,5 @@
 
-import User from '../models/user.model.js';
+import User from './models/user.model.js';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import { asyncHandler } from '../utils/asyncHandler.js';
