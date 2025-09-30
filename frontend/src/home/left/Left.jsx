@@ -1,28 +1,84 @@
+import React, { useState, useEffect } from 'react';
+import useChatStore from '../../store/chatStore';
+import { useNavigate } from 'react-router-dom';
 
-import React from 'react';
-import Search from './Search';
-import Users from './Users';
+import ChatUser from './ChatUser';
 import Logout from './Logout';
 import LogoutConfirm from './LogoutConfirm';
-import { useState } from 'react';
-function Left({ selectedUser, onSelectUser }) {
+import FindPeopleButton from './FindPeopleButton';
+
+
+function Left() {
   const [showLogout, setShowLogout] = useState(false);
+  const navigate = useNavigate();
+  const {
+    acceptedChats, setAcceptedChats,
+    loadingChats, setLoadingChats,
+    chatError, setChatError,
+    selectedUser, setSelectedUser
+  } = useChatStore();
+
+  // Fetch accepted chat partners (global)
+  useEffect(() => {
+    const fetchAcceptedChats = async () => {
+      setLoadingChats(true);
+      setChatError("");
+      try {
+        const token = localStorage.getItem("accessToken");
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat-requests/accepted`, {
+          headers: { Authorization: token ? token : "" },
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Failed to fetch chats");
+        setAcceptedChats(data.data.chats || []);
+      } catch (err) {
+        setChatError(err.message);
+      } finally {
+        setLoadingChats(false);
+      }
+    };
+    fetchAcceptedChats();
+  }, [setAcceptedChats, setLoadingChats, setChatError]);
 
   const handleLogout = () => setShowLogout(true);
   const handleCancel = () => setShowLogout(false);
   const handleConfirm = () => {
     setShowLogout(false);
-    alert('Logged out!'); // Replace with real logout logic
+    localStorage.removeItem('accessToken');
+    navigate('/signin');
   };
 
   return (
     <>
       <div className="flex flex-col flex-[0.35] min-w-[280px] max-w-[400px] h-full border-r border-white bg-gray-800 text-white px-4 py-6 gap-4">
-        <h2 className="font-bold text-xl mb-4 border-b border-gray-700 pb-2">Chats</h2>
-        <Search />
-        <div className="my-2 border-b border-gray-700" />
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-bold text-xl border-b border-gray-700 pb-2">Chats</h2>
+          <FindPeopleButton onClick={() => navigate('/find-people')} />
+        </div>
         <div className="flex-1 min-h-0 overflow-y-auto">
-          <Users selectedUserId={selectedUser?.id} onSelectUser={onSelectUser} />
+          {loadingChats ? (
+            <div className="text-center text-gray-400">Loading chats...</div>
+          ) : chatError ? (
+            <div className="text-center text-red-500">{chatError}</div>
+          ) : acceptedChats.length === 0 ? (
+            <div className="text-center text-gray-400">No accepted chats yet</div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {acceptedChats.map((user) => (
+                <ChatUser
+                  key={user._id}
+                  user={{
+                    ...user,
+                    id: user._id,
+                    name: user.username,
+                    avatar: user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}`,
+                  }}
+                  selected={selectedUser && (selectedUser._id === user._id || selectedUser.id === user._id)}
+                  onClick={() => setSelectedUser(user)}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div className="pt-2">
           <Logout onLogout={handleLogout} />

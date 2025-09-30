@@ -1,5 +1,6 @@
 import React from "react";
 
+
 function ChatUser({ user, selected, onClick }) {
   return (
     <div

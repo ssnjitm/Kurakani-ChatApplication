@@ -1,16 +1,15 @@
+import React, { useState } from "react";
+import { FiSearch } from "react-icons/fi";
 
-import React, { useState } from 'react';
-import { FiSearch } from 'react-icons/fi';
-
-const Search = ({ query, setQuery }) => {
+function FindPeopleSearchBar({ query, setQuery }) {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full mb-4">
       <input
         type="text"
         value={query}
         onChange={e => setQuery(e.target.value)}
-        placeholder="Search..."
-        className="pl-10 pr-4 py-2 border border-gray-300 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all shadow-sm"
+        placeholder="Search people by name or email..."
+        className="pl-10 pr-4 py-2 border border-gray-600 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-800 text-white shadow-sm"
       />
       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
         <FiSearch size={20} />
@@ -26,6 +25,6 @@ const Search = ({ query, setQuery }) => {
       )}
     </div>
   );
-};
+}
 
-export default Search;
+export default FindPeopleSearchBar;

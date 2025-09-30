@@ -1,7 +1,7 @@
 import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
-import { connectDB } from "./db/connect.js";
+import { connectDB } from "./config/db.js";
 import { registerChatSockets } from "./sockets/chat.socket.js";
 
 const port = process.env.PORT || 5000;

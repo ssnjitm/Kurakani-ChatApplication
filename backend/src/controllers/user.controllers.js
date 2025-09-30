@@ -1,5 +1,5 @@
 
-import User from './models/user.model.js';
+import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -9,6 +9,7 @@ import { generateAccessToken, generateRefreshToken } from '../utils/jwt.utils.js
 
 dotenv.config();
 
+// User registration
 export const signup = asyncHandler(async (req, res, next) => {
     const { username, email, password, confirmPassword } = req.body;
     if (!username || !email || !password || !confirmPassword) {
@@ -26,6 +27,31 @@ export const signup = asyncHandler(async (req, res, next) => {
     const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
     return res.status(201).json(new ApiResponse(201, { user: newUser }, 'User registered successfully'));
+});
+
+
+// Change password
+export const changePassword = asyncHandler(async (req, res, next) => {
+    const userId = req.user.id;
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+        return next(new ApiError(400, 'All fields are required'));
+    }
+    if (newPassword !== confirmNewPassword) {
+        return next(new ApiError(400, 'New passwords do not match'));
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+        return next(new ApiError(404, 'User not found'));
+    }
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+        return next(new ApiError(400, 'Current password is incorrect'));
+    }
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+    return res.status(200).json(new ApiResponse(200, {}, 'Password changed successfully'));
 });
 
 

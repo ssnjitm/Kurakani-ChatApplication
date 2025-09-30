@@ -1,31 +1,96 @@
 
 
+import React, { useEffect, useRef } from "react";
+import useChatStore from '../../store/chatStore';
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
+import { io } from "socket.io-client";
 
-function Right({ user, messages, onSend }) {
-  if (!user) {
+const SOCKET_URL = import.meta.env.VITE_BACKEND_URL;
+
+function Right() {
+  const socketRef = useRef(null);
+  const {
+    selectedUser,
+    messages,
+    setMessages,
+    addMessage
+  } = useChatStore();
+
+
+  // Fetch message history when selectedUser changes
+  useEffect(() => {
+    if (!selectedUser) return setMessages(selectedUser?._id, []);
+    const fetchMessages = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats/messages/${selectedUser._id}`, {
+          headers: { Authorization: token ? token : "" },
+        });
+        const data = await res.json();
+        if (res.ok && data.data && Array.isArray(data.data.messages)) {
+          setMessages(selectedUser._id, data.data.messages.map((msg) => ({
+            ...msg,
+            isMe: msg.sender && (msg.sender._id === undefined ? msg.sender === selectedUser._id : msg.sender._id !== selectedUser._id),
+            text: msg.text || msg.message,
+          })));
+        } else {
+          setMessages(selectedUser._id, []);
+        }
+      } catch {
+        setMessages(selectedUser._id, []);
+      }
+    };
+    fetchMessages();
+  }, [selectedUser, setMessages]);
+
+  // Socket.IO connection and real-time updates
+  useEffect(() => {
+    if (!selectedUser) return;
+    if (!socketRef.current) {
+      const token = localStorage.getItem("accessToken");
+      socketRef.current = io(SOCKET_URL, {
+        auth: { token },
+        transports: ["websocket"],
+      });
+    }
+    const socket = socketRef.current;
+    const handleReceive = (msg) => {
+      if (msg.sender === selectedUser._id || msg.receiver === selectedUser._id) {
+        addMessage(selectedUser._id, { ...msg, isMe: msg.sender !== selectedUser._id, text: msg.text || msg.message });
+      }
+    };
+    socket.on("receive_message", handleReceive);
+    return () => {
+      socket.off("receive_message", handleReceive);
+    };
+  }, [selectedUser, addMessage]);
+
+  const handleSend = (msg) => {
+    if (!selectedUser || !msg) return;
+    const socket = socketRef.current;
+    if (typeof msg === "string") {
+      socket.emit("send_message", { to: selectedUser._id, text: msg });
+      addMessage(selectedUser._id, { text: msg, isMe: true });
+    } else if (msg.file) {
+      // File sending not implemented in backend yet
+      alert("File sending not supported yet");
+    }
+  };
+
+  if (!selectedUser) {
     return (
       <div className="flex flex-col flex-1 h-full w-full bg-slate-100 text-gray-900 items-center justify-center">
         <div className="text-gray-400 text-lg">Select a user to start chatting</div>
       </div>
     );
   }
-  // Wrap onSend to handle file messages
-  const handleSend = (msg) => {
-    if (typeof msg === 'object' && msg.file) {
-      // Convert file to URL for preview
-      const fileUrl = URL.createObjectURL(msg.file);
-      onSend({ file: msg.file, fileUrl, fileName: msg.file.name, isMe: true });
-    } else {
-      onSend(msg);
-    }
-  };
+
   return (
     <div className="flex flex-col flex-1 h-full w-full bg-slate-100 text-gray-900">
-      <ChatHeader user={user} />
-      <ChatMessages messages={messages} />
+      <ChatHeader user={selectedUser} />
+      <ChatMessages messages={messages[selectedUser._id] || []} />
       <ChatInput onSend={handleSend} />
     </div>
   );
