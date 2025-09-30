@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import ChatUser from "./ChatUser";
 import useChatStore from '../../store/chatStore';
-
+import { useNavigate } from 'react-router-dom';
 
 // Helper to get current user ID from token (simple base64 decode, not secure)
 function getCurrentUserId() {
@@ -17,7 +16,8 @@ function getCurrentUserId() {
 }
 
 function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
-  const { setSelectedUser } = useChatStore();
+  const { setSelectedUser, acceptedChats } = useChatStore();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -127,26 +127,52 @@ function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
         <div className="mb-2">
           <h4 className="text-xs text-gray-400 mb-1">Pending Chat Requests</h4>
           {pendingRequests.map((req) => (
-            <div key={req._id} className="flex items-center gap-2 bg-yellow-100 p-2 rounded mb-1">
-              <span className="flex-1 text-gray-800 text-sm">{req.fromUser?.username || req.from?.username || "User"}</span>
+            <div key={req._id} className="flex items-center gap-2 bg-warning/20 p-2 rounded mb-1 border border-warning/30">
+              <span className="flex-1 text-warning-content text-sm font-medium">{req.fromUser?.username || req.from?.username || "User"}</span>
               <button
-                className="px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600"
+                className="btn btn-xs btn-success"
                 onClick={() => handleRespondRequest(req._id, "accept")}
               >Accept</button>
               <button
-                className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+                className="btn btn-xs btn-error"
                 onClick={() => handleRespondRequest(req._id, "reject")}
               >Reject</button>
             </div>
           ))}
         </div>
       )}
-      {/* User list with Request Chat button */}
+      {/* User list with Chat or Request Chat button */}
       {users.map((user) => {
         if (user._id === currentUserId) return null; // skip self
+        const isFriend = acceptedChats.some((c) => (c.user1?._id === user._id || c.user2?._id === user._id));
+        if (isFriend) {
+          return (
+            <div key={user._id} className="relative group bg-base-100 border border-base-200 rounded-xl shadow-card flex items-center px-4 py-2 mb-1 hover:shadow-lg transition">
+              <ChatUser
+                user={{
+                  ...user,
+                  id: user._id,
+                  name: user.username,
+                  avatar: user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}`,
+                }}
+                selected={user._id === selectedUserId}
+                onClick={() => (onSelectUser ? onSelectUser(user) : setSelectedUser(user))}
+              />
+              <button
+                className="ml-auto btn btn-sm btn-primary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedUser(user);
+                  navigate('/');
+                }}
+              >Chat</button>
+            </div>
+          );
+        }
+        // Not a friend, show request logic
         const alreadySent = sentRequests.some((r) => r.to === user._id || r.toUser?._id === user._id);
         return (
-          <div key={user._id} className="relative group">
+          <div key={user._id} className="relative group bg-base-100 border border-base-200 rounded-xl shadow-card flex items-center px-4 py-2 mb-1 hover:shadow-lg transition">
             <ChatUser
               user={{
                 ...user,
@@ -157,19 +183,17 @@ function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
               selected={user._id === selectedUserId}
               onClick={() => (onSelectUser ? onSelectUser(user) : setSelectedUser(user))}
             />
-            {/* Request Chat button */}
-            {!alreadySent && (
+            {!alreadySent ? (
               <button
-                className={`absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs bg-blue-500 text-white rounded shadow hover:bg-blue-600 opacity-90 group-hover:opacity-100 ${sendingRequestId === user._id ? 'opacity-60 cursor-not-allowed' : ''}`}
+                className={`ml-auto btn btn-sm btn-accent ${sendingRequestId === user._id ? 'opacity-60 cursor-not-allowed' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (!sendingRequestId) handleRequestChat(user._id);
                 }}
                 disabled={!!sendingRequestId}
               >{sendingRequestId === user._id ? 'Sending...' : 'Request Chat'}</button>
-            )}
-            {alreadySent && (
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs bg-gray-400 text-white rounded opacity-80">Requested</span>
+            ) : (
+              <span className="ml-auto px-2 py-1 text-xs bg-gray-400 text-white rounded opacity-80">Requested</span>
             )}
           </div>
         );

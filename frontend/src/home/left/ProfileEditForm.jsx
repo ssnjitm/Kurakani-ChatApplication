@@ -72,40 +72,40 @@ function ProfileEditForm({ user, onSave }) {
   };
 
   return (
-    <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md flex flex-col gap-6">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold mb-2 text-white">Edit Profile</h2>
-        <label className="text-gray-300">Name
-          <input name="name" value={form.name} onChange={handleChange} className="w-full mt-1 px-3 py-2 rounded bg-gray-900 text-white border border-gray-700" required />
+    <div className="bg-base-100 p-8 rounded-xl shadow-card w-full max-w-md flex flex-col gap-8 border border-base-200">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <h2 className="text-2xl font-display font-bold mb-2 text-primary">Edit Profile</h2>
+        <label className="text-base-content/80 font-medium">Name
+          <input name="name" value={form.name} onChange={handleChange} className="w-full mt-1 px-4 py-3 rounded-lg bg-base-200 text-base-content border border-base-300 focus:outline-none focus:ring-2 focus:ring-primary" required />
         </label>
-        <label className="text-gray-300">Email
-          <input name="email" value={form.email} onChange={handleChange} className="w-full mt-1 px-3 py-2 rounded bg-gray-900 text-white border border-gray-700" required />
+        <label className="text-base-content/80 font-medium">Email
+          <input name="email" value={form.email} onChange={handleChange} className="w-full mt-1 px-4 py-3 rounded-lg bg-base-200 text-base-content border border-base-300 focus:outline-none focus:ring-2 focus:ring-primary" required />
         </label>
-        <label className="text-gray-300">Avatar URL
-          <input name="avatar" value={form.avatar} onChange={handleChange} className="w-full mt-1 px-3 py-2 rounded bg-gray-900 text-white border border-gray-700" />
+        <label className="text-base-content/80 font-medium">Avatar URL
+          <input name="avatar" value={form.avatar} onChange={handleChange} className="w-full mt-1 px-4 py-3 rounded-lg bg-base-200 text-base-content border border-base-300 focus:outline-none focus:ring-2 focus:ring-primary" />
         </label>
-        {error && <div className="text-red-400 text-sm">{error}</div>}
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold" disabled={saving}>{saving ? "Saving..." : "Save"}</button>
+        {error && <div className="text-error text-sm">{error}</div>}
+        <button type="submit" className="bg-primary hover:bg-primary-focus text-primary-content px-6 py-3 rounded-lg font-semibold shadow transition" disabled={saving}>{saving ? "Saving..." : "Save"}</button>
       </form>
-      <div className="border-t border-gray-700 pt-4">
+      <div className="border-t border-base-200 pt-6">
         <button
-          className="text-blue-400 underline text-sm mb-2"
+          className="text-primary underline text-sm mb-2 font-medium"
           onClick={() => setShowPassword((v) => !v)}
         >{showPassword ? "Hide" : "Change Password"}</button>
         {showPassword && (
-          <form onSubmit={handleChangePassword} className="flex flex-col gap-3 mt-2">
-            <label className="text-gray-300">Current Password
-              <input type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="w-full mt-1 px-3 py-2 rounded bg-gray-900 text-white border border-gray-700" required />
+          <form onSubmit={handleChangePassword} className="flex flex-col gap-4 mt-2">
+            <label className="text-base-content/80 font-medium">Current Password
+              <input type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="w-full mt-1 px-4 py-3 rounded-lg bg-base-200 text-base-content border border-base-300 focus:outline-none focus:ring-2 focus:ring-primary" required />
             </label>
-            <label className="text-gray-300">New Password
-              <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full mt-1 px-3 py-2 rounded bg-gray-900 text-white border border-gray-700" required />
+            <label className="text-base-content/80 font-medium">New Password
+              <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full mt-1 px-4 py-3 rounded-lg bg-base-200 text-base-content border border-base-300 focus:outline-none focus:ring-2 focus:ring-primary" required />
             </label>
-            <label className="text-gray-300">Confirm New Password
-              <input type="password" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} className="w-full mt-1 px-3 py-2 rounded bg-gray-900 text-white border border-gray-700" required />
+            <label className="text-base-content/80 font-medium">Confirm New Password
+              <input type="password" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} className="w-full mt-1 px-4 py-3 rounded-lg bg-base-200 text-base-content border border-base-300 focus:outline-none focus:ring-2 focus:ring-primary" required />
             </label>
-            {passwordError && <div className="text-red-400 text-sm">{passwordError}</div>}
-            {passwordMsg && <div className="text-green-400 text-sm">{passwordMsg}</div>}
-            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">Change Password</button>
+            {passwordError && <div className="text-error text-sm">{passwordError}</div>}
+            {passwordMsg && <div className="text-success text-sm">{passwordMsg}</div>}
+            <button type="submit" className="bg-primary hover:bg-primary-focus text-primary-content px-6 py-3 rounded-lg font-semibold shadow transition">Change Password</button>
           </form>
         )}
       </div>

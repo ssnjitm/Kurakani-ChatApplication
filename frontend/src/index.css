@@ -1,2 +1,12 @@
-@import "tailwindcss";
-@plugin "daisyui";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DaisyUI theme is set in tailwind.config.js */
+
+html, body, #root {
+  height: 100%;
+  min-height: 100vh;
+  background-color: theme('colors.base-100');
+  font-family: theme('fontFamily.sans');
+}

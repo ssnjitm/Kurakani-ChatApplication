@@ -31,11 +31,11 @@ function ChatInput({ onSend }) {
   return (
     <form
       onSubmit={handleSend}
-      className="flex items-center gap-2 p-4 border-t border-gray-300 bg-white sticky bottom-0 z-10 relative"
+      className="flex items-center gap-2 p-5 border-t border-base-200 bg-base-100 sticky bottom-0 z-10 relative rounded-b-xl"
     >
       <button
         type="button"
-        className="p-2 rounded-full hover:bg-gray-200 text-gray-600"
+        className="p-2 rounded-full hover:bg-base-200 text-base-content/70"
         onClick={() => setShowEmoji((v) => !v)}
         tabIndex={-1}
       >
@@ -48,7 +48,7 @@ function ChatInput({ onSend }) {
       )}
       <button
         type="button"
-        className="p-2 rounded-full hover:bg-gray-200 text-gray-600"
+        className="p-2 rounded-full hover:bg-base-200 text-base-content/70"
         onClick={() => fileInputRef.current.click()}
         tabIndex={-1}
       >
@@ -65,11 +65,11 @@ function ChatInput({ onSend }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type a message..."
-        className="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-100"
+        className="flex-1 px-5 py-3 rounded-full border border-base-200 focus:outline-none focus:ring-2 focus:ring-primary bg-base-200 text-base-content"
       />
       <button
         type="submit"
-        className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition"
+        className="p-2 rounded-full bg-primary hover:bg-primary-focus text-primary-content transition"
       >
         <FiSend size={20} />
       </button>

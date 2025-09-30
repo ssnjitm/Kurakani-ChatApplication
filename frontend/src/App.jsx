@@ -1,6 +1,3 @@
-
-
-
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
@@ -18,30 +15,32 @@ function ProtectedRoute({ children }) {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/signin" element={<Signin />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <div className='flex h-screen'>
-              <Left />
-              <Right />
-            </div>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/find-people"
-        element={
-          <ProtectedRoute>
-            <FindPeoplePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<Navigate to="/signin" />} />
-    </Routes>
+    <div data-theme="kurakani" className="min-h-screen bg-gradient-to-br from-primary to-secondary/70">
+      <Routes>
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <div className='flex h-screen'>
+                <Left />
+                <Right />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/find-people"
+          element={
+            <ProtectedRoute>
+              <FindPeoplePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/signin" />} />
+      </Routes>
+    </div>
   );
 }
 

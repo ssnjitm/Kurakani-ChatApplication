@@ -50,18 +50,18 @@ function Left() {
 
   return (
     <>
-      <div className="flex flex-col flex-[0.35] min-w-[280px] max-w-[400px] h-full border-r border-white bg-gray-800 text-white px-4 py-6 gap-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-xl border-b border-gray-700 pb-2">Chats</h2>
+      <div className="flex flex-col flex-[0.35] min-w-[280px] max-w-[400px] h-full border-r border-base-200 bg-base-100 text-base-content px-6 py-8 gap-6 shadow-card">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-display font-bold text-2xl tracking-tight text-primary">Chats</h2>
           <FindPeopleButton onClick={() => navigate('/find-people')} />
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto">
           {loadingChats ? (
-            <div className="text-center text-gray-400">Loading chats...</div>
+            <div className="text-center text-base-content/50">Loading chats...</div>
           ) : chatError ? (
-            <div className="text-center text-red-500">{chatError}</div>
+            <div className="text-center text-error">{chatError}</div>
           ) : acceptedChats.length === 0 ? (
-            <div className="text-center text-gray-400">No accepted chats yet</div>
+            <div className="text-center text-base-content/50">No accepted chats yet</div>
           ) : (
             <div className="flex flex-col gap-2">
               {acceptedChats.map((user) => (
@@ -80,7 +80,7 @@ function Left() {
             </div>
           )}
         </div>
-        <div className="pt-2">
+        <div className="pt-4">
           <Logout onLogout={handleLogout} />
         </div>
       </div>
