@@ -7,6 +7,6 @@
 html, body, #root {
   height: 100%;
   min-height: 100vh;
-  background-color: theme('colors.base-100');
-  font-family: theme('fontFamily.sans');
+  /* For background, use <div className="bg-base-100"> in your React components. Do not use theme() in CSS. */
+  font-family: 'Inter', 'ui-sans-serif', 'system-ui', sans-serif;
 }

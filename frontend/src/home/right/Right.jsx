@@ -7,7 +7,7 @@ import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import { io } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_BACKEND_URL;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_BACKEND_URL;
 
 function Right() {
   const socketRef = useRef(null);
