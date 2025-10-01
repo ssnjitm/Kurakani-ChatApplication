@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
     rollupOptions: {
-      external: ['problematic-module'], // Replace with the actual module (e.g., 'fs', 'path')
+      external: ['fs', 'path', 'crypto'], // Replace with the actual module (e.g., 'fs', 'path')
     },
   },
 });
