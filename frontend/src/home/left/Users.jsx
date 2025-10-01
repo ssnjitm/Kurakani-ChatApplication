@@ -121,20 +121,20 @@ function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {/* Pending requests to me */}
       {pendingRequests.length > 0 && (
         <div className="mb-2">
-          <h4 className="text-xs text-gray-400 mb-1">Pending Chat Requests</h4>
+          <h4 className="text-xs text-base-content/60 mb-2 font-semibold">Pending Chat Requests</h4>
           {pendingRequests.map((req) => (
-            <div key={req._id} className="flex items-center gap-2 bg-warning/20 p-2 rounded mb-1 border border-warning/30">
-              <span className="flex-1 text-warning-content text-sm font-medium">{req.fromUser?.username || req.from?.username || "User"}</span>
+            <div key={req._id} className="flex items-center gap-2 bg-warning/10 p-3 rounded-2xl mb-2 border border-warning/30 shadow-md">
+              <span className="flex-1 text-warning-content text-base font-semibold">{req.fromUser?.username || req.from?.username || "User"}</span>
               <button
-                className="btn btn-xs btn-success"
+                className="btn btn-xs btn-success rounded-lg font-semibold px-4"
                 onClick={() => handleRespondRequest(req._id, "accept")}
               >Accept</button>
               <button
-                className="btn btn-xs btn-error"
+                className="btn btn-xs btn-error rounded-lg font-semibold px-4"
                 onClick={() => handleRespondRequest(req._id, "reject")}
               >Reject</button>
             </div>
@@ -147,7 +147,7 @@ function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
         const isFriend = acceptedChats.some((c) => (c.user1?._id === user._id || c.user2?._id === user._id));
         if (isFriend) {
           return (
-            <div key={user._id} className="relative group bg-base-100 border border-base-200 rounded-xl shadow-card flex items-center px-4 py-2 mb-1 hover:shadow-lg transition">
+            <div key={user._id} className="relative group bg-white border border-base-200 rounded-2xl shadow-lg flex items-center px-6 py-3 mb-2 hover:shadow-xl transition-all">
               <ChatUser
                 user={{
                   ...user,
@@ -159,7 +159,7 @@ function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
                 onClick={() => (onSelectUser ? onSelectUser(user) : setSelectedUser(user))}
               />
               <button
-                className="ml-auto btn btn-sm btn-primary"
+                className="ml-auto btn btn-sm btn-primary rounded-lg font-semibold px-6"
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedUser(user);
@@ -172,7 +172,7 @@ function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
         // Not a friend, show request logic
         const alreadySent = sentRequests.some((r) => r.to === user._id || r.toUser?._id === user._id);
         return (
-          <div key={user._id} className="relative group bg-base-100 border border-base-200 rounded-xl shadow-card flex items-center px-4 py-2 mb-1 hover:shadow-lg transition">
+          <div key={user._id} className="relative group bg-white border border-base-200 rounded-2xl shadow-lg flex items-center px-6 py-3 mb-2 hover:shadow-xl transition-all">
             <ChatUser
               user={{
                 ...user,
@@ -185,7 +185,7 @@ function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
             />
             {!alreadySent ? (
               <button
-                className={`ml-auto btn btn-sm btn-accent ${sendingRequestId === user._id ? 'opacity-60 cursor-not-allowed' : ''}`}
+                className={`ml-auto btn btn-sm btn-accent rounded-lg font-semibold px-6 ${sendingRequestId === user._id ? 'opacity-60 cursor-not-allowed' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (!sendingRequestId) handleRequestChat(user._id);
@@ -193,7 +193,7 @@ function Users({ selectedUserId, onSelectUser, search, onRequestsChanged }) {
                 disabled={!!sendingRequestId}
               >{sendingRequestId === user._id ? 'Sending...' : 'Request Chat'}</button>
             ) : (
-              <span className="ml-auto px-2 py-1 text-xs bg-gray-400 text-white rounded opacity-80">Requested</span>
+              <span className="ml-auto px-3 py-1 text-xs bg-base-300 text-base-content rounded-lg opacity-80 font-semibold">Requested</span>
             )}
           </div>
         );

@@ -65,13 +65,13 @@ function ChatInput({ onSend }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type a message..."
-        className="flex-1 px-5 py-3 rounded-full border border-base-200 focus:outline-none focus:ring-2 focus:ring-primary bg-base-200 text-base-content"
+        className="flex-1 px-5 py-4 rounded-xl border border-base-200 focus:outline-none focus:ring-2 focus:ring-primary/60 bg-base-100 text-base-content font-medium shadow-md"
       />
       <button
         type="submit"
-        className="p-2 rounded-full bg-primary hover:bg-primary-focus text-primary-content transition"
+        className="px-6 py-3 rounded-xl bg-primary hover:bg-primary-focus text-primary-content font-bold shadow-md hover:shadow-lg transition-all duration-150"
       >
-        <FiSend size={20} />
+        <FiSend size={22} />
       </button>
     </form>
   );

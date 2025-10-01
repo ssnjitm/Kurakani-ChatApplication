@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import useChatStore from '../../store/chatStore';
-import { useNavigate } from 'react-router-dom';
-
-import ChatUser from './ChatUser';
-import Logout from './Logout';
-import LogoutConfirm from './LogoutConfirm';
-import FindPeopleButton from './FindPeopleButton';
-
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import User from "./User";
+import Logout from "./Logout";
+import LogoutConfirm from "./LogoutConfirm";
+import useChatStore from "../../store/chatStore";
 
 function Left() {
   const [showLogout, setShowLogout] = useState(false);
@@ -25,7 +22,7 @@ function Left() {
       setChatError("");
       try {
         const token = localStorage.getItem("accessToken");
-  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat-requests/accepted`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat-requests/accepted`, {
           headers: { Authorization: token ? token : "" },
         });
         const data = await res.json();
@@ -50,40 +47,51 @@ function Left() {
 
   return (
     <>
-      <div className="flex flex-col flex-[0.35] min-w-[280px] max-w-[400px] h-full border-r border-base-200 bg-base-100 text-base-content px-6 py-8 gap-6 shadow-card">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display font-bold text-2xl tracking-tight text-primary">Chats</h2>
-          <FindPeopleButton onClick={() => navigate('/find-people')} />
+      <div className="flex flex-col flex-[0.35] min-w-[280px] max-w-[400px] h-full bg-gradient-to-b from-indigo-700 to-purple-700 text-white px-6 py-8 gap-6 rounded-2xl shadow-2xl backdrop-blur-lg border border-white/20">
+        
+        {/* Profile Section */}
+        <div className="flex items-center gap-4 mb-6">
+          <User />
         </div>
+
+        {/* Chat List */}
         <div className="flex-1 min-h-0 overflow-y-auto">
           {loadingChats ? (
-            <div className="text-center text-base-content/50">Loading chats...</div>
+            <div className="text-center text-white/70">Loading chats...</div>
           ) : chatError ? (
-            <div className="text-center text-error">{chatError}</div>
+            <div className="text-center text-red-400">{chatError}</div>
           ) : acceptedChats.length === 0 ? (
-            <div className="text-center text-base-content/50">No accepted chats yet</div>
+            <div className="text-center text-white/70">No accepted chats yet</div>
           ) : (
             <div className="flex flex-col gap-2">
               {acceptedChats.map((user) => (
-                <ChatUser
+                <div
                   key={user._id}
-                  user={{
-                    ...user,
-                    id: user._id,
-                    name: user.username,
-                    avatar: user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}`,
-                  }}
-                  selected={selectedUser && (selectedUser._id === user._id || selectedUser.id === user._id)}
+                  className={`flex items-center gap-3 px-4 py-2 rounded-xl cursor-pointer transition-colors hover:bg-white/20 ${
+                    selectedUser && (selectedUser._id === user._id || selectedUser.id === user._id)
+                      ? "bg-white/20 text-white font-semibold"
+                      : "text-white/80"
+                  }`}
                   onClick={() => setSelectedUser(user)}
-                />
+                >
+                  <img
+                    src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}`}
+                    alt={user.username}
+                    className="w-10 h-10 rounded-full object-cover border border-white/30 shadow"
+                  />
+                  <span className="font-medium">{user.username}</span>
+                </div>
               ))}
             </div>
           )}
         </div>
+
+        {/* Logout Section */}
         <div className="pt-4">
-          <Logout onLogout={handleLogout} />
+          <Logout />
         </div>
       </div>
+
       <LogoutConfirm open={showLogout} onConfirm={handleConfirm} onCancel={handleCancel} />
     </>
   );

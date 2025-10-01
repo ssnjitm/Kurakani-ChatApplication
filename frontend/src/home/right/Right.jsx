@@ -82,16 +82,18 @@ function Right() {
   if (!selectedUser) {
     return (
       <div className="flex flex-col flex-1 h-full w-full bg-base-100 text-base-content items-center justify-center">
-        <div className="text-base-content/50 text-lg">Select a user to start chatting</div>
+        <div className="text-base-content/50 text-lg font-semibold">Select a user to start chatting</div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col flex-1 h-full w-full bg-base-100 text-base-content rounded-xl shadow-card mx-2 my-4">
+    <div className="flex flex-col flex-1 h-full w-full bg-white text-base-content rounded-3xl shadow-2xl mx-6 my-8 border border-base-200">
       <ChatHeader user={selectedUser} />
-      <ChatMessages messages={messages[selectedUser._id] || []} />
-      <ChatInput onSend={handleSend} />
+      <div className="flex-1 flex flex-col justify-end">
+        <ChatMessages messages={messages[selectedUser._id] || []} />
+        <ChatInput onSend={handleSend} />
+      </div>
     </div>
   );
 }

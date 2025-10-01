@@ -1,12 +1,4 @@
-@import "tailwindcss";
 
-
-#root {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-}
-
-/* Remove .logo and .card styles, use Tailwind classes in components instead. */
+/* All professional UI/UX styles should use Tailwind and DaisyUI utility classes directly in your React components.
+   Example: <div className="bg-base-100 rounded-xl shadow-card p-8 text-base-content"> ... </div>
+   This ensures a modern, cohesive, and theme-driven design. No custom CSS needed here. */

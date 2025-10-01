@@ -8,14 +8,14 @@ function ChatMessages({ messages }) {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6 bg-base-100 rounded-b-xl">
+    <div className="flex-1 overflow-y-auto px-6 py-8 bg-white rounded-b-3xl">
       {messages.map((msg, idx) => (
         <div
           key={idx}
-          className={`flex ${msg.isMe ? "justify-end" : "justify-start"} mb-3"`}
+          className={`flex ${msg.isMe ? "justify-end" : "justify-start"} mb-4"`}
         >
           <div
-            className={`max-w-xs px-5 py-3 rounded-2xl shadow-card text-sm break-words font-medium ${
+            className={`max-w-xs px-6 py-4 rounded-2xl shadow-lg text-base break-words font-medium ${
               msg.isMe
                 ? "bg-primary text-primary-content rounded-br-none"
                 : "bg-base-200 text-base-content rounded-bl-none"
@@ -30,7 +30,7 @@ function ChatMessages({ messages }) {
                 rel="noopener noreferrer"
                 className="block mt-2 text-xs underline text-primary-content/80 hover:text-primary-content"
               >
-                {msg.file.type.startsWith('image') ? (
+                {msg.file.type && msg.file.type.startsWith('image') ? (
                   <img src={msg.fileUrl} alt={msg.fileName} className="max-h-32 max-w-full rounded mt-1" />
                 ) : (
                   <span>📎 {msg.fileName}</span>
